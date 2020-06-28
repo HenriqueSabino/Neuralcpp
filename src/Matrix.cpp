@@ -1,10 +1,13 @@
 #include "headers/Matrix.hpp"
 
 Matrix::Matrix(int rows, int cols)
-    : rows(rows),
-      cols(cols),
-      values(rows * cols)
 {
+    if (rows <= 0 || cols <= 0)
+        __throw_invalid_argument("The matrix order has to be at least 1 x 1");
+
+    this->rows = rows;
+    this->cols = cols;
+    this->values.resize(rows * cols);
 }
 
 int Matrix::getRows()
@@ -17,18 +20,55 @@ int Matrix::getCols()
     return this->cols;
 }
 
+void Matrix::add(Matrix &other)
+{
+    *this = *this + other;
+}
+
+void Matrix::sub(Matrix &other)
+{
+    *this = *this - other;
+}
+
+void Matrix::mult(double scalar)
+{
+    *this = *this * scalar;
+}
+
+void Matrix::mult(Matrix &other)
+{
+    *this = *this * other;
+}
+
 double Matrix::operator()(int row, int col) const
 {
+    if (row < 0 || row >= rows)
+    {
+        if (col < 0 || col >= cols)
+        {
+            throw IndexOutOfMatrixException(row, col);
+        }
+    }
     return values[row * cols + col];
 }
 
 double &Matrix::operator()(int row, int col)
 {
+    if (row < 0 || row >= rows)
+    {
+        if (col < 0 || col >= cols)
+        {
+            throw IndexOutOfMatrixException(row, col);
+        }
+    }
     return values[row * cols + col];
 }
 
 Matrix Matrix::operator+(Matrix &other) const
 {
+    if (this->rows != other.rows || this->cols != other.cols)
+        throw MatrixOrdersMismatchException(this->rows, this->cols, other.rows, other.cols);
+
     Matrix result(this->rows, this->cols);
 
     for (int i = 0; i < this->rows; i++)
@@ -44,6 +84,9 @@ Matrix Matrix::operator+(Matrix &other) const
 
 Matrix Matrix::operator-(Matrix &other) const
 {
+    if (this->rows != other.rows || this->cols != other.cols)
+        throw MatrixOrdersMismatchException(this->rows, this->cols, other.rows, other.cols);
+
     Matrix result(this->rows, this->cols);
 
     for (int i = 0; i < this->rows; i++)
@@ -74,6 +117,9 @@ Matrix Matrix::operator*(double scalar) const
 
 Matrix Matrix::operator*(Matrix &other) const
 {
+    if (this->cols != other.rows)
+        throw MatrixOrdersMismatchException(this->rows, this->cols, other.rows, other.cols);
+
     Matrix result(this->rows, other.cols);
 
     for (int i = 0; i < this->rows; i++)
@@ -115,6 +161,8 @@ Matrix Matrix::zero(int rows, int cols)
 
 bool Matrix::operator==(const Matrix &other) const
 {
+    if (this->rows != other.rows || this->cols != other.cols)
+        return false;
 
     for (int i = 0; i < this->rows; i++)
     {

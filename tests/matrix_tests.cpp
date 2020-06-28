@@ -39,6 +39,31 @@ TEST_CASE("Testing zero matrix")
     }
 }
 
+TEST_CASE("Testing IndexOutOfMatrixException")
+{
+    Matrix a = Matrix(2, 2);
+    REQUIRE_THROWS_AS(a(2, 2), IndexOutOfMatrixException);
+}
+
+TEST_CASE("Testing MatrixOrdersMismatchException")
+{
+    Matrix a = Matrix(2, 2);
+    Matrix b = Matrix(3, 3);
+
+    REQUIRE_THROWS_AS(a + b, MatrixOrdersMismatchException);
+    REQUIRE_THROWS_AS(a - b, MatrixOrdersMismatchException);
+    REQUIRE_THROWS_AS(a * b, MatrixOrdersMismatchException);
+    REQUIRE_THROWS_AS(a.add(b), MatrixOrdersMismatchException);
+    REQUIRE_THROWS_AS(a.sub(b), MatrixOrdersMismatchException);
+    REQUIRE_THROWS_AS(a.mult(b), MatrixOrdersMismatchException);
+}
+
+TEST_CASE("Testing Matrix constructor exception")
+{
+    REQUIRE_THROWS_AS(Matrix(0, 1), invalid_argument);
+    REQUIRE_THROWS_AS(Matrix(1, 0), invalid_argument);
+}
+
 TEST_CASE("Testing identity matrix")
 {
     Matrix id5 = Matrix::identity(5);
@@ -59,6 +84,7 @@ TEST_CASE("Testing identity matrix")
 
 TEST_CASE("Testing addition/subtraction")
 {
+    // Testing operator +/-
     Matrix a = Matrix(3, 3);
 
     for (int i = 0; i < a.getRows(); i++)
@@ -82,10 +108,21 @@ TEST_CASE("Testing addition/subtraction")
     REQUIRE(a + a == expected_result);
 
     REQUIRE(a == expected_result - a);
+
+    // Testing functions add()/sub()
+
+    a.add(a);
+
+    REQUIRE(a == expected_result);
+
+    a.sub(a);
+
+    REQUIRE(a == Matrix::zero(3));
 }
 
 TEST_CASE("Testing scalar multiplication")
 {
+    // Testing operator *
     Matrix a = Matrix(3, 3);
 
     for (int i = 0; i < a.getRows(); i++)
@@ -108,10 +145,17 @@ TEST_CASE("Testing scalar multiplication")
 
     REQUIRE(a * 4 == expected_result);
     REQUIRE(a == expected_result * 0.25);
+
+    // Testing function mult()
+
+    a.mult(4);
+
+    REQUIRE(a == expected_result);
 }
 
 TEST_CASE("Testing square matrix multiplication")
 {
+    // Testing operator *
     Matrix a = Matrix(3, 3);
 
     for (int i = 0; i < a.getRows(); i++)
@@ -126,10 +170,21 @@ TEST_CASE("Testing square matrix multiplication")
 
     REQUIRE(a * i == a);
     REQUIRE(i * a == a);
+
+    // Testing function mult()
+
+    Matrix b = a; // Saving a values
+
+    i = i * 2;
+
+    a.mult(i); // The same as a * 2
+
+    REQUIRE(b * 2 == a);
 }
 
 TEST_CASE("Testing matrix multiplication")
 {
+    // Testing operator *
     Matrix a = Matrix(2, 3);
     Matrix b = Matrix(3, 4);
 
@@ -165,4 +220,8 @@ TEST_CASE("Testing matrix multiplication")
     expected_result(1, 3) = 128;
 
     REQUIRE(result == expected_result);
+
+    // Testing function mult()
+    a.mult(b);
+    REQUIRE(a == expected_result);
 }
