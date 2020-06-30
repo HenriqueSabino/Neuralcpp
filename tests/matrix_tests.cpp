@@ -1,7 +1,9 @@
+#ifndef CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_MAIN
+#endif
+
 #include "headers/catch.hpp"
-#include "../src/headers/Matrix.hpp"
-#include <iostream>
+#include "../src/math/Matrix.hpp"
 
 TEST_CASE("Testing getters")
 {
