@@ -1,4 +1,4 @@
-#include <math.h>
+#include <cmath>
 #include "ActivationFunction.hpp"
 
 Matrix ReLU::apply(Matrix mat) const
@@ -61,7 +61,7 @@ Matrix Sigmoid::apply(Matrix mat) const
     {
         for (int j = 0; j < mat.getCols(); j++)
         {
-            mat(i, j) = 1 / (1 - exp(mat(i, j)));
+            mat(i, j) = 1 / (1 + exp(-mat(i, j)));
         }
     }
 

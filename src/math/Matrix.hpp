@@ -3,38 +3,22 @@
 #define MATRIX_HPP
 #include <vector>
 #include <exception>
-#include <string>
 
 using namespace std;
 
 struct IndexOutOfMatrixException : public exception
 {
-    int i, j;
-
-    IndexOutOfMatrixException(int i, int j) : i(i), j(j) {}
-
     const char *what() const throw()
     {
-        string cause = "Tried to access index [" + i;
-        cause += ", " + j;
-        cause += "] that is not inside this matrix";
-        return cause.data();
+        return "Tried to access an idex outside the matrix";
     }
 };
 
 struct MatrixOrdersMismatchException : public exception
 {
-    int i, j, m, n;
-
-    MatrixOrdersMismatchException(int i, int j, int m, int n) : i(i), j(j), m(m), n(n) {}
-
     const char *what() const throw()
     {
-        string cause = "Cannot do this operation with matrices of orders (" + i;
-        cause += "x " + j;
-        cause += ") and (" + m;
-        cause += "x) " + n;
-        return cause.data();
+        return "The order of these matrices are incompatible with this operation";
     }
 };
 

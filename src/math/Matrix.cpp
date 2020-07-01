@@ -1,3 +1,5 @@
+#include <cmath>
+#include <limits>
 #include "Matrix.hpp"
 
 Matrix::Matrix(int rows, int cols)
@@ -42,24 +44,18 @@ void Matrix::mult(Matrix &other)
 
 double Matrix::operator()(int row, int col) const
 {
-    if (row < 0 || row >= rows)
+    if (row < 0 || row >= rows || col < 0 || col >= cols)
     {
-        if (col < 0 || col >= cols)
-        {
-            throw IndexOutOfMatrixException(row, col);
-        }
+        throw IndexOutOfMatrixException();
     }
     return values[row * cols + col];
 }
 
 double &Matrix::operator()(int row, int col)
 {
-    if (row < 0 || row >= rows)
+    if (row < 0 || row >= rows || col < 0 || col >= cols)
     {
-        if (col < 0 || col >= cols)
-        {
-            throw IndexOutOfMatrixException(row, col);
-        }
+        throw IndexOutOfMatrixException();
     }
     return values[row * cols + col];
 }
@@ -67,7 +63,7 @@ double &Matrix::operator()(int row, int col)
 Matrix Matrix::operator+(Matrix &other) const
 {
     if (this->rows != other.rows || this->cols != other.cols)
-        throw MatrixOrdersMismatchException(this->rows, this->cols, other.rows, other.cols);
+        throw MatrixOrdersMismatchException();
 
     Matrix result(this->rows, this->cols);
 
@@ -85,7 +81,7 @@ Matrix Matrix::operator+(Matrix &other) const
 Matrix Matrix::operator-(Matrix &other) const
 {
     if (this->rows != other.rows || this->cols != other.cols)
-        throw MatrixOrdersMismatchException(this->rows, this->cols, other.rows, other.cols);
+        throw MatrixOrdersMismatchException();
 
     Matrix result(this->rows, this->cols);
 
@@ -118,7 +114,7 @@ Matrix Matrix::operator*(double scalar) const
 Matrix Matrix::operator*(Matrix &other) const
 {
     if (this->cols != other.rows)
-        throw MatrixOrdersMismatchException(this->rows, this->cols, other.rows, other.cols);
+        throw MatrixOrdersMismatchException();
 
     Matrix result(this->rows, other.cols);
 
@@ -168,7 +164,11 @@ bool Matrix::operator==(const Matrix &other) const
     {
         for (int j = 0; j < this->cols; j++)
         {
-            if ((*this)(i, j) != other(i, j))
+            // More or less equal
+            // Following Catch2 standarts as can be seen here:
+            //https://github.com/catchorg/Catch2/blob/master/docs/assertions.md#floating-point-comparisons
+            double diff = abs((*this)(i, j) - other(i, j));
+            if (!(diff < numeric_limits<float>::epsilon() * 100))
                 return false;
         }
     }

@@ -2,7 +2,7 @@
 #define CATCH_CONFIG_MAIN
 #endif
 
-#include <math.h>
+#include <cmath>
 #include "../src/math/ActivationFunction.hpp"
 #include "../src/math/Matrix.hpp"
 #include "headers/catch.hpp"
@@ -93,13 +93,11 @@ TEST_CASE("Testing application of Sigmoid")
     test(1, 1) = 1;
 
     Matrix groundThruth = Matrix(2, 2);
-    for (int i = 0; i < groundThruth.getRows(); i++)
-    {
-        for (int j = 0; j < groundThruth.getCols(); j++)
-        {
-            groundThruth(i, j) = 1 / (1 + exp(test(i, j)));
-        }
-    }
+    // results obtained at https://www.desmos.com/calculator
+    groundThruth(0, 0) = 0.26894142137;
+    groundThruth(0, 1) = 0.880797077978;
+    groundThruth(1, 0) = 0.5;
+    groundThruth(1, 1) = 0.73105857863;
 
     CHECK(sig->apply(test) == groundThruth);
     delete sig;
@@ -115,14 +113,11 @@ TEST_CASE("Testing application of Sigmoid derivative")
     test(1, 1) = 1;
 
     Matrix groundThruth = Matrix(2, 2);
-    for (int i = 0; i < groundThruth.getRows(); i++)
-    {
-        for (int j = 0; j < groundThruth.getCols(); j++)
-        {
-            double tmp = 1 / (1 + exp(test(i, j)));
-            groundThruth(i, j) = tmp * (1 - tmp);
-        }
-    }
+    // results obtained at https://www.desmos.com/calculator
+    groundThruth(0, 0) = 0.196611933241;
+    groundThruth(0, 1) = 0.104993585404;
+    groundThruth(1, 0) = 0.25;
+    groundThruth(1, 1) = 0.196611933241;
 
     CHECK(sig->applyDerivative(test) == groundThruth);
     delete sig;
@@ -136,14 +131,15 @@ TEST_CASE("Testing application of Softmax")
     test(1, 0) = 2;
     test(2, 0) = 4;
     test(3, 0) = 1;
-    test(5, 0) = 0;
+    test(4, 0) = 0;
 
     Matrix groundThruth = Matrix(5, 1);
-    groundThruth(0, 0) = 0.3;
-    groundThruth(1, 0) = 0.2;
-    groundThruth(2, 0) = 0.4;
-    groundThruth(3, 0) = 0.1;
-    groundThruth(5, 0) = 0;
+    // results obtained at https://keisan.casio.com/exec/system/15168444286206
+    groundThruth(0, 0) = 0.23412165725274;
+    groundThruth(1, 0) = 0.086128544436269;
+    groundThruth(2, 0) = 0.63640864655883;
+    groundThruth(3, 0) = 0.031684920796124;
+    groundThruth(4, 0) = 0.01165623095604;
 
     CHECK(softmax->apply(test) == groundThruth);
     delete softmax;
@@ -157,14 +153,15 @@ TEST_CASE("Testing application of Softmax derivative")
     test(1, 0) = 2;
     test(2, 0) = 4;
     test(3, 0) = 1;
-    test(5, 0) = 0;
+    test(4, 0) = 0;
 
     Matrix groundThruth = Matrix(5, 1);
-    groundThruth(0, 0) = 0.3;
-    groundThruth(1, 0) = 0.2;
-    groundThruth(2, 0) = 0.4;
-    groundThruth(3, 0) = 0.1;
-    groundThruth(5, 0) = 0;
+    // results obtained at https://keisan.casio.com/exec/system/15168444286206
+    groundThruth(0, 0) = 0.23412165725274;
+    groundThruth(1, 0) = 0.086128544436269;
+    groundThruth(2, 0) = 0.63640864655883;
+    groundThruth(3, 0) = 0.031684920796124;
+    groundThruth(4, 0) = 0.01165623095604;
 
     for (int i = 0; i < groundThruth.getRows(); i++)
     {
@@ -174,6 +171,6 @@ TEST_CASE("Testing application of Softmax derivative")
         }
     }
 
-    CHECK(softmax->apply(test) == groundThruth);
+    CHECK(softmax->applyDerivative(test) == groundThruth);
     delete softmax;
 }
