@@ -93,11 +93,11 @@ TEST_CASE("Testing application of Sigmoid")
     test(1, 1) = 1;
 
     Matrix groundThruth = Matrix(2, 2);
-    // results obtained at https://www.desmos.com/calculator
+    // results obtained at https://keisan.casio.com/exec/system/15157249643325
     groundThruth(0, 0) = 0.26894142137;
-    groundThruth(0, 1) = 0.880797077978;
+    groundThruth(0, 1) = 0.88079707797788;
     groundThruth(1, 0) = 0.5;
-    groundThruth(1, 1) = 0.73105857863;
+    groundThruth(1, 1) = 0.73105857863001;
 
     CHECK(sig->apply(test) == groundThruth);
     delete sig;
@@ -113,11 +113,11 @@ TEST_CASE("Testing application of Sigmoid derivative")
     test(1, 1) = 1;
 
     Matrix groundThruth = Matrix(2, 2);
-    // results obtained at https://www.desmos.com/calculator
-    groundThruth(0, 0) = 0.196611933241;
-    groundThruth(0, 1) = 0.104993585404;
+    // results obtained at https://keisan.casio.com/exec/system/15157249643425
+    groundThruth(0, 0) = 0.19661193324148;
+    groundThruth(0, 1) = 0.10499358540351;
     groundThruth(1, 0) = 0.25;
-    groundThruth(1, 1) = 0.196611933241;
+    groundThruth(1, 1) = 0.19661193324148;
 
     CHECK(sig->applyDerivative(test) == groundThruth);
     delete sig;

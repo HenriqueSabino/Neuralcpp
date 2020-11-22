@@ -165,10 +165,8 @@ bool Matrix::operator==(const Matrix &other) const
         for (int j = 0; j < this->cols; j++)
         {
             // More or less equal
-            // Following Catch2 standarts as can be seen here:
-            //https://github.com/catchorg/Catch2/blob/master/docs/assertions.md#floating-point-comparisons
             double diff = abs((*this)(i, j) - other(i, j));
-            if (!(diff < numeric_limits<float>::epsilon() * 100))
+            if (!(diff < numeric_limits<double>::epsilon() * 100))
                 return false;
         }
     }
