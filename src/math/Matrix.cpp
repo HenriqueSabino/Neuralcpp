@@ -5,7 +5,7 @@
 Matrix::Matrix(int rows, int cols)
 {
     if (rows <= 0 || cols <= 0)
-        __throw_invalid_argument("The matrix order has to be at least 1 x 1");
+        std::__throw_invalid_argument("The matrix order has to be at least 1 x 1");
 
     this->rows = rows;
     this->cols = cols;
@@ -166,7 +166,7 @@ bool Matrix::operator==(const Matrix &other) const
         {
             // More or less equal
             double diff = abs((*this)(i, j) - other(i, j));
-            if (!(diff < numeric_limits<double>::epsilon() * 100))
+            if (!(diff < std::numeric_limits<double>::epsilon() * 100))
                 return false;
         }
     }

@@ -4,9 +4,7 @@
 #include <vector>
 #include <exception>
 
-using namespace std;
-
-struct IndexOutOfMatrixException : public exception
+struct IndexOutOfMatrixException : public std::exception
 {
     const char *what() const throw()
     {
@@ -14,7 +12,7 @@ struct IndexOutOfMatrixException : public exception
     }
 };
 
-struct MatrixOrdersMismatchException : public exception
+struct MatrixOrdersMismatchException : public std::exception
 {
     const char *what() const throw()
     {
@@ -25,7 +23,8 @@ struct MatrixOrdersMismatchException : public exception
 // Class used to represent mathematical matrices
 class Matrix
 {
-    vector<double> values;
+private:
+    std::vector<double> values;
     int rows, cols;
 
 public:
